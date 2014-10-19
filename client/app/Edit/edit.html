@@ -2,14 +2,17 @@
 </p>
 <form ng-submit="save()">
     <p>
-        <input type="text" class="span6" ng-model="student.name" placeholder="Name">
+        <input type="text" class="span6" ng-model="student.firstName" placeholder="First Name">
     </p>
     <p>
-        <input type="text" class="span6" ng-model="student.description" placeholder="Description">
+        <input type="text" class="span6" ng-model="student.lastName" placeholder="Last Name">
+    </p>
+    <p>
+        <input type="date" class="span4" ng-model="student.dob" placeholder="MM/DD/YYYY">
     </p>
     <p>
         <a href="#/" class="btn">Cancel</a>
-        <input type="submit" class="span1 btn btn-primary" value="Save" ng-disabled="!student.description">
+        <input type="submit" class="span1 btn btn-primary" value="Save" ng-disabled="!student.firstName||!student.lastName||!student.dob">
         <button class="btn btn-danger" ng-click="delete($event)" ng-if="student.id">Delete</button>
     </p>
     <input type="hidden" ng-model="student.id" />

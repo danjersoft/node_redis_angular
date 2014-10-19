@@ -8,8 +8,8 @@ var path = require('path')
 var app = express();
 
 var students = [
-  { id: 1, name: 'Student One', description: 'Description One' }
-  , { id: 2, name: 'Student Two', description: 'Description Two' }
+  { id: 1, firstName: 'John', lastName: 'Doe', dob: new Date(1996, 5, 5) }
+  , { id: 2, firstName: 'Jane', lastName: 'Dee', dob: new Date(1995, 11, 7) }
 ];
 
 app.configure( function() {
@@ -31,14 +31,15 @@ app.get('/api/student/:id', function(req, res) {
   });
 });
 app.post('/api/student', function(req, res) {
-  students.push({ name: req.body.name, description: req.body.description, id: students.length});
+  students.push({ firstName: req.body.firstName, lastName: req.body.lastName, dob: req.body.dob, id: (students.length + 1)});
   res.json(students[students.length - 1]);
 });
 app.post('/api/student/:id', function(req, res) {
   students.forEach(function(student) {
     if ( req.params.id == student.id) {
-      student.name = req.body.name;
-      student.description = req.body.description;
+      student.firstName = req.body.firstName;
+      student.lastName = req.body.lastName;
+      student.dob = req.body.dob;
       res.json(student);
     }
   });
