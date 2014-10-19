@@ -1,0 +1,16 @@
+<p><a href="#/" class="btn"><i class="icon-home"></i> Home</a>
+</p>
+<form ng-submit="save()">
+    <p>
+        <input type="text" class="span6" ng-model="student.name" placeholder="Name">
+    </p>
+    <p>
+        <input type="text" class="span6" ng-model="student.description" placeholder="Description">
+    </p>
+    <p>
+        <a href="#/" class="btn">Cancel</a>
+        <input type="submit" class="span1 btn btn-primary" value="Save" ng-disabled="!student.description">
+        <button class="btn btn-danger" ng-click="delete($event)" ng-if="student.id">Delete</button>
+    </p>
+    <input type="hidden" ng-model="student.id" />
+</form>

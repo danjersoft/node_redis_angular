@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" ng-app="SMSApp">
+  <head>
+    <title>Student Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <h1>Student Management System</h1>
+      </div>
+      <div ng-view></div>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-route.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular-resource.min.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/List/list.js"></script>
+    <script src="app/Edit/edit.js"></script>
+  </body>
+</html>
