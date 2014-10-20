@@ -5,6 +5,9 @@
   "main": "server.js",
   "repository": "https://github.com/danjersoft/node_redis_angular",
   "author": "DanJerSoft <danjersoftware@gmail.com>",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "async": "~0.2.8",
     "express": "~3.2.4",
