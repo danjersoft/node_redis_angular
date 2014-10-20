@@ -3,14 +3,19 @@
 //
 var path = require('path')
     , express = require('express')
-    , client = require( 'redis' ).createClient( 16379, process.env.IP );
+    , mongoose = require('mongoose');
 
 var app = express();
+mongoose.connect('mongodb://' + process.env.IP + '/test');
 
-var students = [
-  { id: 1, firstName: 'John', lastName: 'Doe', dob: new Date(1996, 5, 5) }
-  , { id: 2, firstName: 'Jane', lastName: 'Dee', dob: new Date(1995, 11, 7) }
-];
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+var studentSchema = new mongoose.Schema({
+  firstName: { type: String, trim: true }
+  , lastName: { type: String, trim: true }
+  , dob: Date
+});
+var Student = mongoose.model('Students', studentSchema);
 
 app.configure( function() {
   app.use( express.bodyParser() );
@@ -20,41 +25,51 @@ app.configure( function() {
   app.use( express.errorHandler( { dumpExceptions: true, showStack: true } ) );
 } );
 
-app.get( '/api/student', function( req, res ) {
-  res.json(students);
+app.get( '/api/student', function( req, res, next ) {
+  Student.find(function(err, results) {
+    if (err) {
+      return next(err);
+    } else {
+      res.json(results);
+    }
+  });
 } );
-app.get('/api/student/:id', function(req, res) {
-  students.forEach(function(student) {
-    if ( req.params.id == student.id) {
+app.get('/api/student/:id', function(req, res, next) {
+  Student.where({ _id: req.params.id }).findOne(function(err, student) {
+    if (err) {
+      return next(err);
+    } else {
       res.json(student);
     }
   });
 });
-app.post('/api/student', function(req, res) {
-  students.push({ firstName: req.body.firstName, lastName: req.body.lastName, dob: req.body.dob, id: (students.length + 1)});
-  res.json(students[students.length - 1]);
-});
-app.post('/api/student/:id', function(req, res) {
-  students.forEach(function(student) {
-    if ( req.params.id == student.id) {
-      student.firstName = req.body.firstName;
-      student.lastName = req.body.lastName;
-      student.dob = req.body.dob;
+app.post('/api/student', function(req, res, next) {
+  var student = new Student({ firstName: req.body.firstName, lastName: req.body.lastName, dob: req.body.dob });
+  student.save(function (err) {
+    if (err) {
+      return next(err);
+    } else {
       res.json(student);
     }
   });
 });
-app.delete('/api/student/:id', function(req, res) {
-  var studentToDelete = -1;
-  students.forEach(function(student, index) {
-    if ( req.params.id == student.id) {
-      studentToDelete = index;
+app.post('/api/student/:id', function(req, res, next) {
+  Student.findOneAndUpdate({ _id: req.params.id }, { firstName: req.body.firstName, lastName: req.body.lastName, dob: req.body.dob }, function(err, student) {
+    if (err) {
+      return next(err);
+    } else {
       res.json(student);
     }
   });
-  if (studentToDelete >= 0) {
-    students.splice(studentToDelete, 1);
-  }
+});
+app.delete('/api/student/:id', function(req, res, next) {
+  Student.where({ _id: req.params.id }).findOneAndRemove(function(err, student) {
+    if (err) {
+      return next(err);
+    } else {
+      res.json(student);
+    }
+  });
 });
 
 app.listen( process.env.PORT || 3000 );

@@ -26,3 +26,5 @@ node_modules
 .lock-wscript
 
 .c9
+data
+mongod

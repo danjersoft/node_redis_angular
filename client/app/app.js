@@ -20,5 +20,5 @@ angular.module('SMSApp', ['ngRoute', 'ngResource', 'list', 'edit'])
     })
     
 .factory('Student', ['$resource', function($resource) {
-    return $resource('api/student/:studentId', { studentId: '@id' });
+    return $resource('api/student/:studentId', { studentId: '@_id' });
 }]);

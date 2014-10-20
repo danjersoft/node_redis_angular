@@ -18,7 +18,7 @@ edit.controller('EditCtrl', ['$scope', '$routeParams', '$location', 'Student',
         
         $scope.save = function() {
             var student = $scope.student;
-            if (student.id) {
+            if (student._id) {
                 student.$save(clearForm);
             } else {
                 Student.save( { firstName: student.firstName, lastName: student.lastName, dob: student.dob }, clearForm);
