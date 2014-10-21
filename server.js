@@ -1,21 +1,8 @@
-//
-// # SimpleServer
-//
 var path = require('path')
     , express = require('express')
-    , mongoose = require('mongoose');
+    , StudentService = require('./server/student-service');
 
 var app = express();
-mongoose.connect('mongodb://' + process.env.IP + '/test');
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-var studentSchema = new mongoose.Schema({
-  firstName: { type: String, trim: true }
-  , lastName: { type: String, trim: true }
-  , dob: Date
-});
-var Student = mongoose.model('Students', studentSchema);
 
 app.configure( function() {
   app.use( express.bodyParser() );
@@ -26,16 +13,16 @@ app.configure( function() {
 } );
 
 app.get( '/api/student', function( req, res, next ) {
-  Student.find(function(err, results) {
+  StudentService.getAllStudents(function(err, students) {
     if (err) {
       return next(err);
     } else {
-      res.json(results);
+      res.json(students);
     }
   });
 } );
 app.get('/api/student/:id', function(req, res, next) {
-  Student.where({ _id: req.params.id }).findOne(function(err, student) {
+  StudentService.getStudentById(req.params.id, function(err, student) {
     if (err) {
       return next(err);
     } else {
@@ -44,8 +31,7 @@ app.get('/api/student/:id', function(req, res, next) {
   });
 });
 app.post('/api/student', function(req, res, next) {
-  var student = new Student({ firstName: req.body.firstName, lastName: req.body.lastName, dob: req.body.dob });
-  student.save(function (err) {
+  StudentService.addStudent(req.body.firstName, req.body.lastName, req.body.dob, function (err, student) {
     if (err) {
       return next(err);
     } else {
@@ -54,7 +40,7 @@ app.post('/api/student', function(req, res, next) {
   });
 });
 app.post('/api/student/:id', function(req, res, next) {
-  Student.findOneAndUpdate({ _id: req.params.id }, { firstName: req.body.firstName, lastName: req.body.lastName, dob: req.body.dob }, function(err, student) {
+  StudentService.updateStudent(req.params.id, req.body.firstName, req.body.lastName, req.body.dob, function(err, student) {
     if (err) {
       return next(err);
     } else {
@@ -63,7 +49,7 @@ app.post('/api/student/:id', function(req, res, next) {
   });
 });
 app.delete('/api/student/:id', function(req, res, next) {
-  Student.where({ _id: req.params.id }).findOneAndRemove(function(err, student) {
+  StudentService.deleteStudent(req.params.id, function(err, student) {
     if (err) {
       return next(err);
     } else {
