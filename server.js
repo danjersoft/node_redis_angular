@@ -2,8 +2,7 @@ var path = require('path')
     , express = require('express');
 
 var app = express();
-// create routes
-require('./server/routes')(app);
+var Routes = require('./server/routes');
 
 app.configure( function() {
   app.use( express.bodyParser() );
@@ -14,3 +13,6 @@ app.configure( function() {
 } );
 
 app.listen( process.env.PORT || 3000 );
+
+// routes can't be defined before app config
+new Routes(app);
