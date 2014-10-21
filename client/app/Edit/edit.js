@@ -30,8 +30,10 @@ edit.controller('EditCtrl', ['$scope', '$routeParams', '$location', 'Student',
                 event.stopPropagation();
                 event.preventDefault();
             }
-            var result = $scope.student.$delete();
-            result.then(clearForm);
+            if (confirm('Are you sure you want to delete ' + $scope.student.firstName + ' ' + $scope.student.lastName)) {
+                var result = $scope.student.$delete();
+                result.then(clearForm);
+            }
         };
     }
 ]);
